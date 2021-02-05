@@ -1,0 +1,22 @@
+{% block title %}{% endblock %}
+
+Hey {{name}},
+
+Your order {{orderid}} has a status update!
+We wish you to use it on good days.
+
+
+{% for item in items %}
+
+        Product Name:   {{item.name}}
+        Brand:  {{item.brand}}
+        Quantity:   {{item.quantity}}
+
+        Price:  {{item.price}}$
+        Status: {{item.status}}
+
+
+{% endfor %}
+
+Thank you for being COOL AS FUCK!
+GreentingsShop LTD, ŞTİ.

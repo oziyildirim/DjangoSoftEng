@@ -1,0 +1,7 @@
+Hey {{name}},
+
+Your order address with order id: {{orderid}} has been updated.
+
+
+Thank you for being COOL AS FUCK!
+GreentingsShop LTD, ŞTİ.

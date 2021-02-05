@@ -1,0 +1,6 @@
+Hello {{name}}
+Your order with order id: {{order_id}}  has been reached to us.
+You can view your invoice in the attachment below.
+Thank you for choosing us!
+
+GreentingsShop LTD, ŞTİ.

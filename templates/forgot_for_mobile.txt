@@ -1,0 +1,8 @@
+Hey {{name}},
+
+We heard that you forgot your password. It is an irresponsible act. But we give you a chance to get a new one.
+
+      Verification Code: {{code}}
+
+Thank you for being COOL AS FUCK!
+GreentingsShop LTD, ŞTİ.

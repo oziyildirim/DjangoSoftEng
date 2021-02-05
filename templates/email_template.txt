@@ -1,0 +1,11 @@
+Hey {{name}}
+
+Welcome to GreentingsShop. We are happy to have you here but you should verify your email.
+Unfortunately our backend team is not qualified enough so we will appreciate if you type the code manually to link below.
+
+
+      Verification code: {{code}}
+      Verification link: {{link}}
+
+Thank you for being COOL AS FUCK!
+GreentingsShop LTD, ŞTİ.

@@ -1,0 +1,7 @@
+Hey {{name}},
+
+Your order with order id: {{orderid}} has been cancelled.
+
+
+Thank you for being COOL AS FUCK!
+GreentingsShop LTD, ŞTİ.
