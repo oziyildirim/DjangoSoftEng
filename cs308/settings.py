@@ -79,12 +79,8 @@ WSGI_APPLICATION = 'cs308.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'cs308',
-        'USER': 'onat2',
-        'PASSWORD': 'cs308',
-        'HOST': '37.148.209.68',   # Or an IP Address that your DB is hosted on
-        'PORT': '3306',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
@@ -149,4 +145,3 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'greentingsshop@gmail.com'
-EMAIL_HOST_PASSWORD = 'vwbbadqskawiwmah'
