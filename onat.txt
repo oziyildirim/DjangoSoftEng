@@ -1,0 +1,24 @@
+Bir orderın addresini değiştirmek için
+127.0.0.1:8000/orderaddresschange/ adresine post request atıyosunuz.
+post body
+{
+"order_id": id-> değiştirmek istediğiniz orderın idsi
+"address_id": id -> değişince olmasını istediğiniz adresin idsi
+}
+Sales manager bir adres değişimini onaylamak isterse
+127.0.0.1:8000/orderaddresschangeapproval/id/ id=orderaddresschangeapproval tablosundaki id(bu id size verilecek)
+urlsine get request atıyosunuz bu sayede order ın idsi değişmiş oluyor
+
+
+127.0.0.1:8000/cancelorder/id
+
+get--> Bekleyen order iptali requestlerini verir id olarak dummy bi id yazmanız gerekiyor. 1 yazabilirsiniz.
+size ordercancel_id ve order_id döner.(ADMIN)
+
+post--> Order iptalini onaylamak için post kullanacaksınız.urldeki id yerine ordercancel_id koyacaksınız. Bu order
+iptali requestini kabul etmiş olacaksınız.(ADMIN)
+
+put--> User order iptali için requestte bulunmuş oluyor id yerine order_id yazıcaksınız.Zaten user kendi orderlerını
+görebildiği için o id yi girecek. (USER)
+
+delete--> Order iptalini reddetmiş olursunuz. Id yerine ordercancel_id giriceksiniz.(ADMIN)

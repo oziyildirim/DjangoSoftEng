@@ -1,0 +1,206 @@
+
+İçindekiler:
+
+	1-) Comments Guide			url: "127.0.0.1:8000/comments/<int:id>"			( <int:id>=product_id ) 
+	2-) Comment Approval Guide		url: "127.0.0.1:8000/commentapproval"
+	3-) UserComments Guide			url: "127.0.0.1:8000/usercomments/<ind:id>/"		( <int:id> = user_id )
+
+________________________________________________________________________________________________________________________________________________________
+
+1-) Comments Guide
+
+use url: "127.0.0.1:8000/comments/<int:id>"	( <int:id>=product_id )  
+with GET and POST methods.
+
+
+1.1- GET Method: This request returns comments that are approved and belongs to the product.
+
+1.1.1- Response for GET:
+
+ - If everything goes well, HTTP-202-ACCEPTED will be returned with comment infos in an array like;
+[
+    {
+        "comment_id": 19,
+        "text": "very chic",
+        "date": "2020-12-14",
+        "rating": 4.0,
+        "validation": true,
+        "nickname": "fan_of_this_bag",
+        "product": 12,
+        "user_id": 1
+    },
+    {
+        "comment_id": 20,
+        "text": "nice",
+        "date": "2020-12-14",
+        "rating": 4.0,
+        "validation": true,
+        "nickname": "beste",
+        "product": 12,
+        "user_id": 1
+    },
+    {
+        "comment_id": 28,
+        "text": "deneme",
+        "date": "2020-12-15",
+        "rating": 3.0,
+        "validation": true,
+        "nickname": "Ozannn Yıldırım",
+        "product": 12,
+        "user_id": 2
+    }
+]
+
+- If product does not exist, HTTP-404-NOT-FOUND will be returned.
+
+
+____________
+
+
+1.2- POST Method: Adds a comment to the product.
+
+Body of POST
+{
+    "nickname":"Ozan",
+    "user_id":2,
+    "text":"I like it!",
+    "rating":5,
+    "validation":false	
+}
+
+1.2.1- Respons for POST:
+
+ - If successful, HTTP-201-CREATED will be returned with comment data.
+
+ - If not, HTTP-400-BAD-REQUEST will be given with message "error".
+
+________________________________________________________________________________________________________________________________________________________
+
+
+2-) CommentsApproval Guide:
+use url: "127.0.0.1:8000/commentapproval/"
+with GET, POST and DELETE methods.
+
+2.1- GET Method: Retrieves comments that needs approval, should be used by product manager.
+
+2.1.1- Response for GET:
+
+ - If everything goes well, HTTP-202-ACCEPTED will be returned with comment infos in an array like;
+[
+    {
+        "comment_id": 19,
+        "text": "very chic",
+        "date": "2020-12-14",
+        "rating": 4.0,
+        "validation": false,
+        "nickname": "fan_of_this_bag",
+        "product": 12,
+        "user_id": 1
+    },
+    {
+        "comment_id": 20,
+        "text": "nice",
+        "date": "2020-12-14",
+        "rating": 4.0,
+        "validation": false,
+        "nickname": "beste",
+        "product": 12,
+        "user_id": 1
+    },
+    {
+        "comment_id": 28,
+        "text": "deneme",
+        "date": "2020-12-15",
+        "rating": 3.0,
+        "validation": false,
+        "nickname": "Ozannn Yıldırım",
+        "product": 12,
+        "user_id": 2
+    }
+]
+
+____________
+
+
+2.2- POST Method: Changes a comments approval type from false to true.
+
+Body for POST
+
+<id:comment_id>			# no JSON format, no specification, just id, if it is 34, just send 34
+
+
+*****
+NOTE: I (Ozan) do not approve this way of body but will not change because it is already implemented. It does not fit in standarts or any rules but it works.
+
+*****
+
+2.2.1- Response for POST
+
+ - If everything goes well, HTTP-200-OK will be returned.
+
+ - If body is incorrect, HTTP-400-BAD-REQUEST will be returned.
+
+____________
+
+
+2.3- DELETE Method: Deletes a comment if it is not approved.
+
+Body for DELETE
+
+<id:comment_id>			# no JSON format, no specification, just id, if it is 34, just send 34
+
+
+2.3.1- Response for DELETE:
+
+ - If everything goes well, HTTP-200-OK will be returned.
+
+ - If body is incorrect, HTTP-400-BAD-REQUEST will be returned.
+
+________________________________________________________________________________________________________________________________________________________
+
+
+3-) UserComments Guide
+
+use url: "127.0.0.1:8000/usercomments/<ind:id>/"		(<int:id> = user_id)
+with GET method.
+
+
+3.1- GET Method: Returns the comments made by the user.
+
+3.1.1- Response for GET
+
+ - If everything goes well, HTTP-202-ACCEPTED will be returned with comment infos in an array like;
+[
+    {
+        "comment_id": 19,
+        "text": "very chic",
+        "date": "2020-12-14",
+        "rating": 4.0,
+        "validation": true,
+        "nickname": "fan_of_this_bag",
+        "product": 12,
+        "user_id": 1
+    },
+    {
+        "comment_id": 20,
+        "text": "nice",
+        "date": "2020-12-14",
+        "rating": 4.0,
+        "validation": true,
+        "nickname": "beste",
+        "product": 12,
+        "user_id": 1
+    },
+    {
+        "comment_id": 28,
+        "text": "deneme",
+        "date": "2020-12-15",
+        "rating": 3.0,
+        "validation": true,
+        "nickname": "Ozannn Yıldırım",
+        "product": 12,
+        "user_id": 2
+    }
+]
+
+ - If not, HTTP-404-NOT-FOUND will be returned.

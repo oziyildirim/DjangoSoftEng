@@ -1,0 +1,310 @@
+
+İçindekiler:
+
+	1-) Signup Guide - url:"127.0.0.1:8000/signup/"
+	2-) Login Guide - url:"127.0.0.1:8000/login/"
+	3-) ChangeUserInfo Guide - url:"127.0.0.1:8000/changeuser/"
+	4-) ChangePassword Guide - url:"127.0.0.1:8000/pass/"
+	5-) EmailVerification Guide - url:"127.0.0.1:8000/emailconfirm/"
+	6-) ForgotMyPassword Guide - url:"127.0.0.1:8000/forgot/"
+    7-) My Address Guide - url:"127.0.0.1:8000/myaddress/<int:id>/"             ( <int:id> = user_id )
+    8-) ForgotMyPassword Guide - url:"127.0.0.1:8000/forgotmobile/"
+
+________________________________________________________________________________________________________________________________________________________
+
+1-) SignUp Guide:
+
+use url: "127.0.0.1:8000/signup/" with post method.
+
+
+1.1- POST Method
+
+Body of POST:
+{
+    "first_name": "",
+    "last_name": "",
+    "email": "",
+    "password": "",
+    "phone_number": "",
+    "verified": false,
+    "user_type": "Customer"
+}
+
+1.1.1- Response for POST:
+
+ - If email exists, HTTP-400-BAD-REQUEST error will be given and 
+"email exists" will be returned.
+
+ - If username exists, HTTP-400-BAD-REQUEST error will be given and 
+"username exists" will be returned.
+
+ - If successful, HTTP-201-CREATED will be returned with data.
+
+
+________________________________________________________________________________________________________________________________________________________
+
+
+2-) Login Guide:
+
+use url: "127.0.0.1:8000/login/" with post method.
+
+
+2.1- POST Method
+
+Body of POST:
+{
+    "email": "",
+    "password": ""
+}
+
+2.1.1- Response for POST:
+
+ - If username or email does not exists, HTTP-400-BAD-REQUEST error 
+will be given and "username or email does not exists" will be
+returned.
+
+ - If password is incorrect, HTTP-400-BAD-REQUEST error 
+will be given and "password is incorrect" will be
+returned.
+
+ - If login is successful, HTTP-202-ACCEPTED will be given and
+"login successful" will be returned with;
+{
+    "user_id": 71,
+    "first_name": "Seray",
+    "last_name": "Ayakta",
+    "email": "oyildirim@sabanciuniv.edu",
+    "verified": false,
+    "user_type": "Customer",
+    "user_exists": true
+}
+
+
+- UPDATE DONE -    User info will be returned.
+* EDIT - User info already returned.
+
+________________________________________________________________________________________________________________________________________________________
+
+
+3-) Change User Info Guide:
+
+use url: "127.0.0.1:8000/changeuser/" with post method.
+
+
+3.1- POST Method
+
+Body of POST:
+{
+    "user_id": "",
+    "first_name": "",
+    "last_name": "",
+    "email": "",
+    "phone_number": ""
+}
+
+
+User data should be hold on frontend cache after login is done. For user data change, for unchanged data you should return existing user data.
+This means if name is "seray" but you will not change it, you should still send it with changed data.
+You can go to Trendyol/Hesabım/Kullanıcı Bilgilerim to see an example.
+
+3.1.1- Responses for POST:
+
+ - If everything goes well, HTTP-200-OK will be returned with user info which are;
+{
+	'user_id': 
+	'first_name': 
+	'last_name':
+	'email': 
+	'verified': 
+	'user_type':
+}
+
+
+ - If entered email is being used on another account,HTTP-400-BAD-REQUEST error 
+will be given and "Email exists for another account." will be
+returned.
+
+ - If JSON format is wrong, HTTP-400-BAD-REQUEST error 
+will be given and "Wrong JSON format." will be
+returned.
+
+
+________________________________________________________________________________________________________________________________________________________
+
+
+4-) Change Password Guide:
+
+use url: "127.0.0.1:8000/pass/" with post method.
+
+
+4.1- POST Method
+
+Body of POST:
+{
+    "user_id":"",
+    "old_password":""
+    "new_password":""
+}
+
+4.1.1- Responses for POST:
+If everything goes well, HTTP-200-OK will be returned with user info which are;
+{
+	'user_id': 
+	'first_name': 
+	'last_name':
+	'email': 
+	'verified': 
+	'user_type':
+}
+
+ - If entered old_password does not match with database password, HTTP-400-BAD-REQUEST error 
+will be given and "Old password does not match." will be
+returned.
+
+ - If JSON format is wrong, HTTP-400-BAD-REQUEST error will be given and "Wrong JSON format." will be returned.
+
+
+________________________________________________________________________________________________________________________________________________________
+
+
+5-) EmailVerification Guide
+
+use url:"127.0.0.1:8000/emailconfirm/"					
+with POST method.
+
+
+5.1- POST Method
+
+Body of POST:
+{
+	"user_id":
+	"verification_code":
+}
+
+5.1.1- Response for POST:
+
+ - If everything goes well, HTTP-200-OK will be returned with message "Verification codes match". User will be verified. (verified=True)
+
+ - If verification codes does not match HTTP-400-BAD-REQUEST will be returned with message "Verification codes do not match.
+
+ - If JSON format is wrong HTTP-400-BAD-REQUEST error will be given and "Wrong JSON format." will be returned.
+
+
+________________________________________________________________________________________________________________________________________________________
+
+
+
+6-) ForgotMyPassword Guide:
+
+use url: "127.0.0.1:8000/forgot/" 		
+with POST, PUT methods.
+
+
+
+6.1- POST Method
+
+Body of POST:
+{
+	"email":"oyildirim@sabanciuniv.edu"
+}
+
+6.1.1- Response for POST:
+
+- If everything goes well, HTTP-200-OK will be returned. Mail will be sent to email adress if it exists on database.
+
+- If mail address does not exist or JSON format is wrong, HTTP-400-BAD-REQUEST will be returned.
+
+____________
+
+
+6.2- PUT Method:	User id will be sent via mail to user in url link. User will use this link to get to your website as in email confirmaiton. So url link will have user id.
+
+Body for PUT
+{
+	"user_id":71,
+    "password":"hello"
+    "verification_code":"350270"        # send verification_code as STRING !!!
+}
+
+6.2.1- Response for PUT:
+
+ - If everything goes well, HTTP-200-OK will be returned. Password will be changed on database.
+
+ - If not, HTTP-400-BAD-REQUEST will be returned.
+
+
+________________________________________________________________________________________________________________________________________________________
+
+
+7-) My Address Guide:
+
+use url: "127.0.0.1:8000/myaddress/<int:id>/" 						(<int:id> = user_id)
+with GET method.
+
+
+7.1- GET Method: Returns addresses aligned to user id specified.
+
+1.1.1- Response for GET:
+
+ - If everything goes well, HTTP-200-OK will be returned;
+[
+    {
+        "address_id": 17,
+        "first_name": "ser",
+        "last_name": "ay",
+        "city": "m",
+        "state": "m",
+        "postal_code": 11111,
+        "country": "w",
+        "address_line": "w",
+        "phone_number": "12",
+        "user": 1
+    }
+]
+
+ - If not, HTTP-400-BAD-REQUEST will be returned.
+
+________________________________________________________________________________________________________________________________________________________
+
+
+
+8-) ForgotMyPassword Guide:
+
+use url: "127.0.0.1:8000/forgotmobile/" 		
+with POST, PUT methods.
+
+
+
+8.1- POST Method
+
+Body of POST:
+{
+	"email":"oyildirim@sabanciuniv.edu"
+}
+
+8.1.1- Response for POST:
+
+- If everything goes well, HTTP-200-OK will be returned. Mail will be sent to email adress if it exists on database.
+
+- If mail address does not exist or JSON format is wrong, HTTP-400-BAD-REQUEST will be returned.
+
+____________
+
+
+8.2- PUT Method:	User id will be sent via mail to user in url link. User will use this link to get to your website as in email confirmaiton. So url link will have user id.
+
+Body for PUT
+{
+	"email":"oyildirim@sabanciuniv.edu",
+    "password":"hello"
+    "verification_code":"350270"        # send verification_code as STRING !!!
+}
+
+8.2.1- Response for PUT:
+
+ - If everything goes well, HTTP-200-OK will be returned. Password will be changed on database.
+
+ - If not, HTTP-400-BAD-REQUEST will be returned.
+
+
+________________________________________________________________________________________________________________________________________________________

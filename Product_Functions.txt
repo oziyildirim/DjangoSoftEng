@@ -1,0 +1,523 @@
+
+İçindekiler:
+
+	1-) ProductManager Guide - url:"127.0.0.1:8000/manage/<ind:id>"         (<ind:id> = product manage user id)
+	2-) Product-Category Guide - url:"127.0.0.1:8000/categorise/<int:id>"   ( <int:id>=product_id )  
+	3-) addPhoto Guide - url:"127.0.0.1:8000/addphoto/"
+	4-) getPhoto Guide - url:"127.0.0.1:8000/photos/"
+	5-) categoryManager Guide - url:"127.0.0.1:8000/category/"
+	6-) categoryNames Guide - url:"127.0.0.1:8000/categorynames/<int:id>"	( <int:id>=category_id )  # unlike its name, it returns brand names
+	7-) search Guide - url:"127.0.0.1:8000/search/"
+    8-) ProductIDView - url:"127.0.0.1:8000/prod/<int:id>/"                 ( <int:id>=product_id )  
+    9-) categoryFilter Guide - url:"127.0.0.1:8000/categoryitems/<int:id>/" ( <int:id>=category_id )
+    10-) ML Guide - url:"127.0.0.1:8000/ml/<int:id>/"                       ( <int:id>=user_id )
+
+________________________________________________________________________________________________________________________________________________________
+
+1-) Product Manager Guide:
+
+What it does? : Creates, edits and deletes product. Can only assign 1 category with this url.
+To assign more categories or get categories, use Product-Category. We do NOT check if a product exists before. Duplicates can be created.
+
+
+use url: "127.0.0.1:8000/manage/<ind:id>" (<ind:id> = user id of product manager)
+with get, post, put, delete methods.
+
+*********
+NOTE!!: TO GET CATEGORY INFO OF A PRODUCT, USE PRODUCT-CATEGORYGUIDE
+NOTE!!: EVERY WARNING FOR CATEGORY ALSO IMPLIES FOR PHOTOS/IMAGES
+
+*********
+
+1.1- GET Method
+
+1.1.1- Response for GET:
+
+ - If everything goes well, HTTP-200-OK will be returned with product info which are;
+{
+	"product_id": ,
+        "product_name": "",
+        "price": ,
+        "description": "",
+        "stock": ,
+        "real_stock": ,
+        "img": "",
+        "rating": ,
+        "brand_name": "",
+        "recommended": ,
+        "user": 
+}
+
+ - If user does not exist or JSON format is incorrect, HTTP-400-BAD-REQUEST will be returned.
+
+____________
+
+
+1.2- POST Method: Creates a product, can only assign 1 category with this url.
+
+Body for POST 
+{
+    "product_name": "",
+    "price": ,
+    "description": ""
+    "stock": ,
+    "img": "",
+    "brand_name": "",
+    "category_name": "",
+}
+
+Note: Initial category input taken with this url. A product may have several categories, thats why we need another function to get multiple categories.
+
+
+1.2.1- Response for POST:
+
+ - If everything goes well, HTTP-201-CREATED will be returned with product info which are;
+{
+	"product_id": ,
+        "product_name": "",
+        "price": ,
+        "description": "",
+        "stock": ,
+        "real_stock": ,
+        "img": "",
+        "rating": ,
+        "brand_name": "",
+        "recommended": ,
+        "user": 
+}
+
+ - If user does not exist or user does not have any products as product manager, HTTP-404-NOT-FOUND will be returned.
+____________
+
+
+1.3- PUT Method: Updates product info            # to update category info is on 127.0.0.1:8000/categorise/<int:id> url.
+
+Body for PUT 
+{
+    "product_id": ,
+    "product_name": "",
+    "price": ,
+    "description": ""
+    "stock": ,
+    "img": "",
+    "brand_name": "",
+}
+
+Product data can be obtained with get method to frontend. For product data change, for unchanged data you should return existing product data.
+This means if product_name is "bag" but you will not change it, you should still send it with changed data.
+If you want to GET product data by using id, check homepage urls.
+User info change uses the same method as this.
+
+
+1.3.1- Response for PUT:
+
+ - If everything goes well, HTTP-200-OK will be returned with product info which are;
+{
+	"product_id": ,
+        "product_name": "",
+        "price": ,
+        "description": "",
+        "stock": ,
+        "real_stock": ,
+        "img": "",
+        "rating": ,
+        "brand_name": "",
+        "recommended": ,
+        "user": 
+}
+
+ - If JSON format is incorrect, HTTP-400-BAD-REQUEST will be returned.
+
+____________
+
+
+1.4- DELETE Method: Deleting product
+
+Body for DELETE
+{
+    "product_id":
+}
+
+
+1.4.1- Response for DELETE:
+
+ - If everything goes well, HTTP-204-NO-CONTENT will be returned
+
+ - If product does not exist or JSON format is incorrect, HTTP-400-BAD-REQUEST will be returned.
+________________________________________________________________________________________________________________________________________________________
+
+
+2-) Product-Category Relation or addCategoryInfo
+
+use url: "127.0.0.1:8000/categorise/<int:id>"  ( <int:id>=product_id )    
+with get, post, delete methods
+
+Get method returns a products category info, which categories it as
+
+2.1- GET Method
+
+2.1.1- Response for GET:
+
+ - If everything goes well, HTTP-200-OK will be returned with category_names in an array as;
+[
+	{
+		"category_name":
+	},
+	{
+		"category_name":
+	},
+	...
+]
+
+ - If JSON format is incorrect, HTTP-400-BAD-REQUEST will be returned.
+
+____________
+
+
+2.2- POST Method: Creates a relation between category and product, adding category info to product
+
+Body for POST
+{
+    "category_name":
+}
+
+2.2.1- Response for POST:
+
+ - If everything goes well, HTTP-201-CREATED will be returned with inserted category_id and product_id;
+{
+	"product_id": ,
+ 	"category_id":
+}
+
+ - If inserted category already exists for specified product, HTTP-406-NOT-ACCEPTABLE
+will be given and "Already exists" will be returned.
+
+ - If JSON format is incorrect, HTTP-400-BAD-REQUEST will be returned.
+
+____________
+
+
+2.3- DELETE Method: Deletes category info from product
+
+Body for DELETE 
+{
+    "category_name":
+}
+
+2.3.1- Response for DELETE:
+
+ - If everything goes well, HTTP-204-NO-CONTENT will be returned.
+
+ - If after deletion, product will have no category left, HTTP-406-NOT-ACCEPTABLE
+will be given and "Product must have at least one category." will be returned.
+
+ - If product_id does not exist in database or already deleted, HTTP-404-NOT-FOUND
+will be returned.
+
+
+________________________________________________________________________________________________________________________________________________________
+
+
+3-) Adding Photos
+
+use url: "127.0.0.1:8000/addphoto/" with post method.
+
+This is a function for ProductManager to add new photos to their products.
+
+
+3.1- POST Method: Sends product_id and img url
+
+Body of POST
+{
+    "product":
+    "image_url":""
+}
+
+
+3.1.1- Response for POST:
+
+ - If everything goes well, HTTP-201-CREATED will be returned with;
+{
+	"photos_id": ,
+	"product": ,		# product_id
+ 	"image_url":""
+}
+
+ - If JSON format is incorrect, HTTP-400-BAD-REQUEST will be returned.
+________________________________________________________________________________________________________________________________________________________
+
+
+4-) Photos Guide:
+
+use url: "127.0.0.1:8000/photos/" with post method.
+
+This function is to retrieve photos with product id.
+
+
+4.1- POST Method
+
+Body of POST:
+{
+    "product_id":""
+}
+
+
+4.1.1- Response of POST:
+
+ - If everything goes well, HTTP-202-ACCEPTED will be returned with array of photos as;
+[
+	{
+		"image_url": ,
+	},
+	{
+		"image_url": ,
+	},
+	...
+]
+
+ - If JSON format is incorrect, HTTP-400-BAD-REQUEST will be returned.
+________________________________________________________________________________________________________________________________________________________
+
+
+5-) Category Manager Guide
+
+********
+NOTE!!: TO GET, POST, PUT, DELETE CATEGORY, CHECK HOMEPAGE URLS.
+
+url: "127.0.0.1:8000/category/
+********
+
+________________________________________________________________________________________________________________________________________________________
+
+
+6-) CategoryNames Guide
+
+use url: "127.0.0.1:8000/categorynames/<int:id>" 			(<int:id> = category_id)
+with GET method.
+
+
+6.1- GET Method: This function returns brand names to select via filter.
+
+6.1.1- Response for GET:
+
+ - If everything goes well, HTTP-200-OK will be returned with brand names array;
+[
+    {
+        "name": "Gomi"
+    },
+    {
+        "name": "sda"
+    }
+]
+
+ - If not, HTTP-400-BAD_REQUEST will be returned.
+
+________________________________________________________________________________________________________________________________________________________
+
+
+7-) Search Guide
+
+use url: "127.0.0.1:8000/search/"
+with GET method.
+
+7.1- GET Method
+
+7.1.1- Url Attachments:
+
+add ?search=....  at the end of url to search a specific string inside products name and description areas.	"127.0.0.1:8000/search/?search=wwf"
+
+add ?ordering=(price or rating)  at the end of url to get values in increasing order by price or rating, use -price or -rating to get them in decreasing order		"127.0.0.1:8000/search/?ordering=-price"
+
+add ?search=...&ordering=... to use both of them, also ?ordering=...&search=...  is acceptable.			"127.0.0.1:8000/search/?ordering=rating&search=gomi"
+
+
+7.1.2- Response for GET
+
+ - If everything goes well, HTTP-200-OK will be returned with product data in array;
+[
+    {
+        "product_id": 21,
+        "product_name": "WE DON'T FIT THE SYSTEM AND THE SYSTEM DOES NOT FIT THE WORLD tote",
+        "price": 25.0,
+        "description": "There's no denying it: WE DON'T FIT THE SYSTEM AND THE SYSTEM DOES NOT FIT THE WORLD. White print on black tote bag - printed in NYCThese large and super-sturdy tote bags are upcycled from cancelled orders at our screen printer, the old print is covered up with a large pocket with surged edges detail in white and a divider for keeping your smaller things organized and easily accessible. 16in wide x 14in deepx 4.5in wide with 24in strap",
+        "stock": 98,
+        "real_stock": 98,
+        "img": "https://cdn.shopify.com/s/files/1/0016/4426/5584/products/wedonotfitthesystemtote_360x.jpg?v=1603407286%20360w,%20",
+        "rating": 3.0,
+        "brand_name": "Official Rebrand",
+        "recommended": false,
+        "user": null
+    },
+    {
+        "product_id": 17,
+        "product_name": "KNOT",
+        "price": 30.0,
+        "description": "intage wooden bracelet crocheted with linen twine.Measurements:Inner Diameter: 2 1/2  / 6.5cmOuter Diameter: 3 1/4 /  8.5cm ",
+        "stock": 97,
+        "real_stock": 98,
+        "img": "https://cdn.shopify.com/s/files/1/1459/6798/products/1291551_250x.jpg?v=1580855202",
+        "rating": 5.0,
+        "brand_name": "COUPER -ET- COUDRE",
+        "recommended": false,
+        "user": null
+    }
+]
+
+ - If not, HTTP-400-BAD_REQUEST will be returned.
+
+________________________________________________________________________________________________________________________________________________________
+
+
+8-) ProductIDView Guide:
+
+use url: "127.0.0.1:8000/prod/<int:id>/" 						(<int:id> = product_id)
+with GET method.
+
+
+8.1- GET Method: Viewed attribute increases by one.
+
+8.1.1- Response for GET:
+
+ - If everything goes well, HTTP-200-OK will be returned;
+{
+    "product_id": 6,
+    "product_name": "Panda Pride (Unisex)",
+    "price": 55.0,
+    "description": "Featuring the panda logo, this shirt highlights protecting the future of nature worldwide. Made from 70% organic bamboo and 30% organic cotton.",
+    "stock": 34,
+    "real_stock": 47,
+    "img": "https://gifts.worldwildlife.org/gift-center/images/apparel-and-more/Graphic-T-Shirts/WWF-T-Shirts/panda-pride-unisex/detail_main.jpg",
+    "rating": 3.5714285714285716,
+    "brand_name": "WWF",
+    "recommended": false,
+    "base_price": 55.0,
+    "discount": false,
+    "viewed": 4,
+    "user": 2
+}
+
+ - If not, HTTP-400-BAD_REQUEST will be returned.
+
+
+________________________________________________________________________________________________________________________________________________________
+
+
+9-) Category Filter Guide:
+
+use url: "127.0.0.1:8000/categoryitems/<int:id>/" 						(<int:id> = category_id)
+with POST method.
+
+
+
+9.1- POST Method
+
+Body of POST:
+{
+    "brand_name":[],                    # SEND BRANDS AS ["WWF","Bey Store"]
+    "price_lower":0,                    # SEND 0 AS DEFAULT
+    "price_upper":10000,                # SEND 10000 AS DEFAULT
+    "rating":0                          # SEND 0 AS DEFAULT
+}
+
+9.1.1- Response for POST:
+
+- If everything goes well, HTTP-202-ACCEPTED will be returned with;
+
+[
+    {
+        "product_id": 7,
+        "product_name": "Pink Short-Sleeved (Hers)",
+        "price": 55.0,
+        "description": "Featuring the panda logo, this shirt highlights protecting the future of nature worldwide. Made from 70% organic bamboo and 30% organic cotton.",
+        "stock": 86,
+        "real_stock": 73,
+        "img": "https://gifts.worldwildlife.org/gift-center/images/apparel-and-more/Graphic-T-Shirts/WWF-T-Shirts/pink-short-sleeved-hers/detail_main.jpg",
+        "rating": 5.0,
+        "brand_name": "WWF",
+        "recommended": true,
+        "base_price": 55.0,
+        "discount": false,
+        "viewed": 0,
+        "user": 2
+    },
+    {
+        "product_id": 8,
+        "product_name": "White Short-Sleeved Classic (Hers)",
+        "price": 55.0,
+        "description": "Featuring the panda logo, this shirt highlights protecting the future of nature worldwide. Made from 70% organic bamboo and 30% organic cotton.",
+        "stock": 99,
+        "real_stock": 95,
+        "img": "https://gifts.worldwildlife.org/gift-center/images/apparel-and-more/Graphic-T-Shirts/WWF-T-Shirts/white-short-sleeved-classic-hers/detail_main.jpg",
+        "rating": 5.0,
+        "brand_name": "WWF",
+        "recommended": false,
+        "base_price": 55.0,
+        "discount": false,
+        "viewed": 0,
+        "user": 2
+    }
+]
+
+- If not, HTTP-400-BAD-REQUEST will be returned.
+
+
+
+
+________________________________________________________________________________________________________________________________________________________
+
+
+
+10-) ML Filter Guide:
+
+use url: "127.0.0.1:8000/ml/<int:id>/" 						(<int:id> = user_id)
+with GET method.
+
+
+
+10.1- GET Method
+
+10.1.1- Response for GET:
+
+- If everything goes well, HTTP-202-ACCEPTED will be returned with;
+
+[
+    {
+        "product_id": 7,
+        "product_name": "Pink Short-Sleeved (Hers)",
+        "price": 55.0,
+        "description": "Featuring the panda logo, this shirt highlights protecting the future of nature worldwide. Made from 70% organic bamboo and 30% organic cotton.",
+        "stock": 86,
+        "real_stock": 73,
+        "img": "https://gifts.worldwildlife.org/gift-center/images/apparel-and-more/Graphic-T-Shirts/WWF-T-Shirts/pink-short-sleeved-hers/detail_main.jpg",
+        "rating": 5.0,
+        "brand_name": "WWF",
+        "recommended": true,
+        "base_price": 55.0,
+        "discount": false,
+        "viewed": 0,
+        "user": 2
+    },
+    {
+        "product_id": 8,
+        "product_name": "White Short-Sleeved Classic (Hers)",
+        "price": 55.0,
+        "description": "Featuring the panda logo, this shirt highlights protecting the future of nature worldwide. Made from 70% organic bamboo and 30% organic cotton.",
+        "stock": 99,
+        "real_stock": 95,
+        "img": "https://gifts.worldwildlife.org/gift-center/images/apparel-and-more/Graphic-T-Shirts/WWF-T-Shirts/white-short-sleeved-classic-hers/detail_main.jpg",
+        "rating": 5.0,
+        "brand_name": "WWF",
+        "recommended": false,
+        "base_price": 55.0,
+        "discount": false,
+        "viewed": 0,
+        "user": 2
+    }
+]
+
+- If not, HTTP-400-BAD-REQUEST will be returned.
+
+
+
+
+________________________________________________________________________________________________________________________________________________________
